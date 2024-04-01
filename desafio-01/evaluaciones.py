@@ -1,12 +1,16 @@
 from pizza import Pizza
 
 def print_atributes():
+    '''Funcion para imprimir atributos de la clase Pizza no iniciada
+    '''
     print(f"El precio es: {Pizza.precio}")
     print(f"El tamaño es: {Pizza.size}")
     print(f"Los ingredientes proteicos son: {Pizza.proteicos}")
     print(f"Los ingredientes vegetales son: {Pizza.vegetales}")
 
 def print_atributes_iniciado(nueva_pizza: Pizza):
+    '''Funcion para imprimir atributos de un objeto Pizza
+    '''
     print(f"El precio es: {nueva_pizza.precio}")
     print(f"El tamaño es: {nueva_pizza.size}")
     print(f"Los ingredientes proteicos son: {nueva_pizza.proteicos}")
