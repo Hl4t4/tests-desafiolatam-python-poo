@@ -5,7 +5,7 @@ class Te():
     formato = int
 
     @staticmethod
-    def tiempo_y_recomendacion (sabor):
+    def tiempo_y_recomendacion (sabor: int):
         #Te negro
         if sabor == 1:
             return 3, "Se recomienda consumir al desayuno"
@@ -19,7 +19,7 @@ class Te():
             return 0, "Valor no valido"
     
     @staticmethod
-    def tiempo_y_recomendacion (formato):
+    def precio (formato: int):
         if formato == 300:
             return 3000
         elif formato == 500:
