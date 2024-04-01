@@ -1,3 +1,3 @@
 proteicos = ["Pollo", "Vacuno", "Carne Vegetal"]
-vegetales = ["tomate", "aceitunas", "Carne champiñones"]
+vegetales = ["Tomate", "Aceitunas", "Champiñones"]
 masas = ["Tradicional", "Delgada"]
