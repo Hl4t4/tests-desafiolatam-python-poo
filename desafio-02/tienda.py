@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from producto import Producto
 
-class tienda(ABC):
+class Tienda(ABC):
     def __init__(self, nombre: str, costo_de_delivery: int):
         pass
     @abstractmethod
-    def ingresar_producto(self):
+    def ingresar_producto(self, nombre:str, precio:int, stock:int):
         pass
 
     @abstractmethod
@@ -13,24 +13,141 @@ class tienda(ABC):
         pass
 
     @abstractmethod
-    def realizar_venta(self):
+    def realizar_venta(self, nombre:str, cantidad:int):
         pass
 
     @property
     @abstractmethod
-    def nombre(self, nombre: str):
+    def nombre(self):
         pass
-        # self.__nombre = nombre
     
     @property
     @abstractmethod
-    def nombre(self, listado_de_productos: list):
+    def nombre(self):
         pass
-        # self.__listado_de_productos = listado_de_productos
 
     @property
     @abstractmethod
-    def costo_delivery(self, costo_delivery: int):
+    def costo_delivery(self):
         pass
-        # self.__costo_delivery = costo_delivery
 
+class Restaurante(Tienda):
+    def __init__(self, nombre: str, costo_de_delivery: int):
+        self.__nombre = nombre
+        self.__costo_de_delivery = costo_de_delivery
+        self.__listado_de_productos = [] # ES NECESARIO EN ESTE PUNTO AGREGAR PRODUCTOS O BASTA CON DEJAR EN EL METODO DE ABAJO
+
+    def ingresar_producto(self, nombre:str, precio:int, stock:int = 0):
+        nuevo_producto = Producto(nombre, precio)
+        if not any(nuevo_producto == producto for producto in self.__listado_de_productos):
+            self.__listado_de_productos.append(nuevo_producto)
+
+    def listar_productos(self):
+        titulo = (":::::::: LISTADO DE PRODUCTOS :::::::::\n""PRODUCTO\tPRECIO\n")
+        listado_de_productos = [f"{producto.nombre}\t\t{producto.precio}\n" for producto in self.__listado_de_productos]
+        return f"{titulo}{''.join(listado_de_productos)}"
+
+    def realizar_venta(self, nombre:str, cantidad:int):
+        pass
+
+    @property
+    def nombre(self):
+        return self.__nombre
+    
+    @property
+    def listado_de_productos(self):
+        return self.__listado_de_productos
+
+    @property
+    def costo_delivery(self):
+        return self.__costo_de_delivery
+    
+class Supermercado(Tienda):
+    def __init__(self, nombre: str, costo_de_delivery: int):
+        self.__nombre = nombre
+        self.__costo_de_delivery = costo_de_delivery
+        self.__listado_de_productos = [] # ES NECESARIO EN ESTE PUNTO AGREGAR PRODUCTOS O BASTA CON DEJAR EN EL METODO DE ABAJO
+
+    def ingresar_producto(self, nombre:str, precio:int, stock:int = 0):
+        nuevo_producto = Producto(nombre, precio, stock)
+        comprobacion = [[index, nuevo_producto + producto] for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
+        if comprobacion != []:
+            self.__listado_de_productos[comprobacion[0][0]] = comprobacion[0][1]
+        else:
+            self.__listado_de_productos.append(nuevo_producto)
+
+    def listar_productos(self):
+        titulo = (":::::::: LISTADO DE PRODUCTOS :::::::::\n""PRODUCTO\tPRECIO\tSTOCK\n")
+        listado_de_productos = [f"{producto.nombre}\t\t{producto.precio}\t\t{producto.stock} Pocos productos disponibles\n" if producto.stock < 10 else f"{producto.nombre}\t\t{producto.precio}\t\t{producto.stock}\n" for producto in self.__listado_de_productos]
+        return f"{titulo}{''.join(listado_de_productos)}"
+
+    def realizar_venta(self, nombre:str, cantidad:int):
+        nuevo_producto = Producto(nombre, 0, cantidad)
+        comprobacion = [index for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
+        if comprobacion != []:
+            costo = self.__listado_de_productos[comprobacion[0]].precio
+            if self.__listado_de_productos[comprobacion[0]] >= nuevo_producto:
+                costo = costo * cantidad
+                self.__listado_de_productos[comprobacion[0]] = self.__listado_de_productos[comprobacion[0]] - nuevo_producto
+            else:
+                costo = costo * self.__listado_de_productos[comprobacion[0]].stock
+                self.__listado_de_productos[comprobacion[0]] = 0
+            return costo + self.costo_delivery
+        return 0
+
+    @property
+    def nombre(self):
+        return self.__nombre
+    
+    @property
+    def listado_de_productos(self):
+        return self.__listado_de_productos
+
+    @property
+    def costo_delivery(self):
+        return self.__costo_de_delivery
+    
+class Farmacia(Tienda):
+    def __init__(self, nombre: str, costo_de_delivery: int):
+        self.__nombre = nombre
+        self.__costo_de_delivery = costo_de_delivery
+        self.__listado_de_productos = [] # ES NECESARIO EN ESTE PUNTO AGREGAR PRODUCTOS O BASTA CON DEJAR EN EL METODO DE ABAJO
+
+    def ingresar_producto(self, nombre:str, precio:int, stock:int = 0):
+        nuevo_producto = Producto(nombre, precio, stock)
+        comprobacion = [[index, nuevo_producto + producto] for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
+        if comprobacion != []:
+            self.__listado_de_productos[comprobacion[0][0]] = comprobacion[0][1]
+        else:
+            self.__listado_de_productos.append(nuevo_producto)
+
+    def listar_productos(self):
+        titulo = (":::::::: LISTADO DE PRODUCTOS :::::::::\n""PRODUCTO\tPRECIO\tSTOCK\n")
+        listado_de_productos = [f"{producto.nombre}\t\t{producto.precio} Envío gratis al solicitar este producto\t\t{producto.stock}\n" if producto.precio > 15000 else f"{producto.nombre}\t\t{producto.precio}\t\t{producto.stock}\n" for producto in self.__listado_de_productos]
+        return f"{titulo}{''.join(listado_de_productos)}"
+
+    def realizar_venta(self, nombre:str, cantidad:int):
+        nuevo_producto = Producto(nombre, 0, cantidad)
+        comprobacion = [index for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
+        if comprobacion != [] and cantidad <= 3:
+            costo = self.__listado_de_productos[comprobacion[0]].precio
+            if self.__listado_de_productos[comprobacion[0]] >= nuevo_producto:
+                costo = costo * cantidad
+                self.__listado_de_productos[comprobacion[0]] = self.__listado_de_productos[comprobacion[0]] - nuevo_producto
+            else:
+                costo = costo * self.__listado_de_productos[comprobacion[0]].stock
+                self.__listado_de_productos[comprobacion[0]] = 0
+            return costo + self.costo_delivery
+        return 0
+
+    @property
+    def nombre(self):
+        return self.__nombre
+    
+    @property
+    def listado_de_productos(self):
+        return self.__listado_de_productos
+
+    @property
+    def costo_delivery(self):
+        return self.__costo_de_delivery

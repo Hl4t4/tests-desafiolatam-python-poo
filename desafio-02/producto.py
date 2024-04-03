@@ -33,3 +33,6 @@ class Producto():
     
     def __eq__(self, other):
         return self.nombre == other.nombre
+    
+    def __ge__(self, other):
+        return self.stock >= other.stock
