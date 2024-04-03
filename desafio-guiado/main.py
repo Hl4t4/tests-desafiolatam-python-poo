@@ -16,9 +16,9 @@ while(accion == 1):
     #Calculo de la probabilidad de ganar
     probabilidad = personaje1.instancia(personaje1, orco)
     #Impresion de pantalla de informacion y solicitud de accion
-    accion = personaje1.opciones_y_accion(probabilidad, orco_nombre)
+    accion = personaje1.opciones_y_accion(orco_nombre, probabilidad)
     #Resultado del combate
-    combate = personaje1.resultado(personaje1, orco, accion, probabilidad)
+    combate = personaje1.resultado(orco_nombre, accion, probabilidad)
 
     #Cambios de estado
     if combate == 1: 
