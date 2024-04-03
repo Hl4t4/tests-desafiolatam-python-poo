@@ -1,6 +1,14 @@
 from tienda import Restaurante, Supermercado, Farmacia
 
 def creacion_tienda():
+    '''Funcion que pide al usuario los datos para crear una tienda
+    Parameters
+    ----------
+    Returns
+    ----------
+    [Restaurante, Supermercado, Farmacia]
+        Objeto tienda especifico a un tipo con nombre y costo de delivery
+    '''
     print("Que tipo de tienda desea crear")
     print("1. Restaurante")
     print("2. Supermercado")
@@ -17,10 +25,18 @@ def creacion_tienda():
         tienda = Farmacia(nombre, costo_de_delivery)
     return tienda
 
-tienda = creacion_tienda()
-if tienda != None:
+def ingresar_productos(tienda):
+    '''Funcion que pide al usuario que ingrese productos
+    Parameters
+    ----------
+    tienda: [Restaurante / Supermercado / Farmacia]
+        Objeto tienda de un tipo especifico
+    Returns
+    ----------
+    [Restaurante / Supermercado / Farmacia]
+        Objeto tienda de un tipo especifico con los productos agregados
+    '''
     print("\nPor favor ingrese los productos de la tienda")
-
     opcion = "y"
     while opcion == "y":
         print("Para ingresar un producto debe agregar")
@@ -31,7 +47,20 @@ if tienda != None:
             stock = int(input("Stock: "))
         tienda.ingresar_producto(nombre, precio, stock)
         opcion = input("Desea continuar agregando productos? \"y\"/\"n\"\n")
+    return tienda
 
+def elecciones(tienda):
+    '''Funcion que pide el usuario elegir entre listar productos, realizar ventas o salir del programa
+    Parameters
+    ----------
+    tienda: [Restaurante / Supermercado / Farmacia]
+        Objeto tienda de un tipo especifico
+    Returns
+    ----------
+    [Restaurante / Supermercado / Farmacia]
+        Objeto tienda de un tipo especifico con productos descontados de ventas realizadas
+    '''
+    opcion = None
     while opcion != 3:
         print("\nQue accion desea realizar")
         print("1. Listar productos existentes")
@@ -53,3 +82,11 @@ if tienda != None:
             else:
                 costo, cantidad = venta
                 print(f"El costo total es de {costo}, por una cantidad de {cantidad} del producto {nombre}")
+    return tienda
+
+#Carga principal
+tienda = creacion_tienda()
+if tienda != None:
+    tienda = ingresar_productos(tienda)
+    tienda = elecciones(tienda)
+    
