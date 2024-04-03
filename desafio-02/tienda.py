@@ -48,7 +48,12 @@ class Restaurante(Tienda):
         return f"{titulo}{''.join(listado_de_productos)}"
 
     def realizar_venta(self, nombre:str, cantidad:int):
-        pass
+        nuevo_producto = Producto(nombre, 0, cantidad)
+        comprobacion = [index for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
+        if comprobacion != []:
+            return self.__listado_de_productos[comprobacion[0]].precio * cantidad + self.costo_delivery, cantidad
+        else:
+            return 0
 
     @property
     def nombre(self):
@@ -70,14 +75,14 @@ class Supermercado(Tienda):
 
     def ingresar_producto(self, nombre:str, precio:int, stock:int = 0):
         nuevo_producto = Producto(nombre, precio, stock)
-        comprobacion = [[index, nuevo_producto + producto] for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
+        comprobacion = [[index, producto + nuevo_producto] for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
         if comprobacion != []:
             self.__listado_de_productos[comprobacion[0][0]] = comprobacion[0][1]
         else:
             self.__listado_de_productos.append(nuevo_producto)
 
     def listar_productos(self):
-        titulo = (":::::::: LISTADO DE PRODUCTOS :::::::::\n""PRODUCTO\tPRECIO\tSTOCK\n")
+        titulo = (":::::::: LISTADO DE PRODUCTOS :::::::::\n""PRODUCTO\tPRECIO\t\tSTOCK\n")
         listado_de_productos = [f"{producto.nombre}\t\t{producto.precio}\t\t{producto.stock} Pocos productos disponibles\n" if producto.stock < 10 else f"{producto.nombre}\t\t{producto.precio}\t\t{producto.stock}\n" for producto in self.__listado_de_productos]
         return f"{titulo}{''.join(listado_de_productos)}"
 
@@ -90,9 +95,10 @@ class Supermercado(Tienda):
                 costo = costo * cantidad
                 self.__listado_de_productos[comprobacion[0]] = self.__listado_de_productos[comprobacion[0]] - nuevo_producto
             else:
-                costo = costo * self.__listado_de_productos[comprobacion[0]].stock
+                cantidad = self.__listado_de_productos[comprobacion[0]].stock
+                costo = costo * cantidad
                 self.__listado_de_productos[comprobacion[0]] = 0
-            return costo + self.costo_delivery
+            return (costo + self.costo_delivery), cantidad
         return 0
 
     @property
@@ -115,29 +121,35 @@ class Farmacia(Tienda):
 
     def ingresar_producto(self, nombre:str, precio:int, stock:int = 0):
         nuevo_producto = Producto(nombre, precio, stock)
-        comprobacion = [[index, nuevo_producto + producto] for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
+        comprobacion = [[index, producto + nuevo_producto] for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
         if comprobacion != []:
             self.__listado_de_productos[comprobacion[0][0]] = comprobacion[0][1]
         else:
             self.__listado_de_productos.append(nuevo_producto)
 
     def listar_productos(self):
-        titulo = (":::::::: LISTADO DE PRODUCTOS :::::::::\n""PRODUCTO\tPRECIO\tSTOCK\n")
+        titulo = (":::::::: LISTADO DE PRODUCTOS :::::::::\n""PRODUCTO\tPRECIO\t\tSTOCK\n")
         listado_de_productos = [f"{producto.nombre}\t\t{producto.precio} Envío gratis al solicitar este producto\t\t{producto.stock}\n" if producto.precio > 15000 else f"{producto.nombre}\t\t{producto.precio}\t\t{producto.stock}\n" for producto in self.__listado_de_productos]
         return f"{titulo}{''.join(listado_de_productos)}"
 
     def realizar_venta(self, nombre:str, cantidad:int):
         nuevo_producto = Producto(nombre, 0, cantidad)
+        if cantidad > 3:
+            return -1
         comprobacion = [index for index, producto in enumerate(self.__listado_de_productos) if nuevo_producto == producto]
-        if comprobacion != [] and cantidad <= 3:
+        if comprobacion != []:
             costo = self.__listado_de_productos[comprobacion[0]].precio
             if self.__listado_de_productos[comprobacion[0]] >= nuevo_producto:
                 costo = costo * cantidad
                 self.__listado_de_productos[comprobacion[0]] = self.__listado_de_productos[comprobacion[0]] - nuevo_producto
             else:
-                costo = costo * self.__listado_de_productos[comprobacion[0]].stock
+                cantidad = self.__listado_de_productos[comprobacion[0]].stock
+                costo = costo * cantidad
                 self.__listado_de_productos[comprobacion[0]] = 0
-            return costo + self.costo_delivery
+            if self.__listado_de_productos[comprobacion[0]].precio > 10000:
+                return costo, cantidad
+            else:
+                return (costo + self.costo_delivery), cantidad
         return 0
 
     @property

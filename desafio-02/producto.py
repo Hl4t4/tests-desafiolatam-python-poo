@@ -19,9 +19,9 @@ class Producto():
     @stock.setter
     def stock(self, stock:int):
         if stock < 0:
-            self.stock = 0
+            self.__stock = 0
         else:
-            self.stock = stock
+            self.__stock = stock
 
     def __add__(self, other):
         self.stock = self.stock + other.stock
