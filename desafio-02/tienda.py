@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from producto import Producto
 
 class tienda(ABC):
     def __init__(self, nombre: str, costo_de_delivery: int):
