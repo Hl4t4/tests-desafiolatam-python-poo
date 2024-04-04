@@ -1,6 +1,7 @@
 from abc import ABC
 from pregunta import Pregunta
 from listado_respuestas import ListadoRespuestas
+from typing import List
 
 class Encuesta(ABC):
     def __init__(self, nombre:str, preguntas:dict) -> None:
@@ -11,17 +12,17 @@ class Encuesta(ABC):
             self.__lista_de_preguntas.append(Pregunta(pregunta["enunciado"], pregunta["requerida"], pregunta["alternativas"], pregunta["ayuda"]))
 
     @property
-    def lista_de_preguntas(self):
+    def lista_de_preguntas(self) -> List[Pregunta]:
         return self.__lista_de_preguntas
 
     @property
-    def listados_de_respuestas(self):
+    def listados_de_respuestas(self) -> List[ListadoRespuestas]:
         return self.__listados_de_respuestas
     
-    def agregar_respuestas(self, listado_de_respuestas:ListadoRespuestas):
+    def agregar_respuestas(self, listado_de_respuestas:ListadoRespuestas) -> None:
         self.__listados_de_respuestas.append(listado_de_respuestas)
 
-    def mostrar_encuesta(self):
+    def mostrar_encuesta(self) -> None:
         print(f"La encuesta {self.nombre} tiene las siguientes preguntas:\n")
         for respuesta in self.lista_de_preguntas:
             respuesta.mostrar_pregunta()
@@ -41,15 +42,15 @@ class EncuestaLimitadaEdad (Encuesta):
             self.edad_minima = edad_minima
             self.edad_maxima = edad_minima
 
-    def agregar_respuestas(self, listado_de_respuestas:ListadoRespuestas):
+    def agregar_respuestas(self, listado_de_respuestas:ListadoRespuestas) -> None:
         if self.comprobar_edad(listado_de_respuestas.usuario.edad):
             self.__listados_de_respuestas.append(listado_de_respuestas)
 
-    def comprobar_edad(self, edad:int):
+    def comprobar_edad(self, edad:int) -> bool:
         return self.edad_minima >= edad >= self.edad_maxima
     
     @staticmethod
-    def comprobar_limite_edades(edad_minima, edad_maxima):
+    def comprobar_limite_edades(edad_minima, edad_maxima) -> bool:
         if edad_minima > edad_maxima:
             return False
         return True
@@ -61,9 +62,9 @@ class EncuestaLimitadaRegion (Encuesta):
         #Falta logica de regiones validas
         self.lista_de_regiones = lista_de_regiones
 
-    def agregar_respuestas(self, listado_de_respuestas:ListadoRespuestas):
+    def agregar_respuestas(self, listado_de_respuestas:ListadoRespuestas) -> None:
         if self.comprobar_region(listado_de_respuestas.usuario.region):
             self.__listados_de_respuestas.append(listado_de_respuestas)
 
-    def comprobar_region(self, region):
+    def comprobar_region(self, region) -> bool:
         return region in self.lista_de_regiones

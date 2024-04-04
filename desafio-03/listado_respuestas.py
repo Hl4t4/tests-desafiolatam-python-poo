@@ -5,7 +5,9 @@ class ListadoRespuestas():
         self.respuestas = respuestas
         self.usuario = usuario
         
-    def mostrar_respuestas(self):
-        print(f"Las respuestas del usuario {self.usuario.nombre} son:")
+    def mostrar_respuesta(self) -> None:
+        print(f"Las respuestas del usuario {self.usuario.correo} son:")
         print(self.respuestas)
+        print('\n')
+
         

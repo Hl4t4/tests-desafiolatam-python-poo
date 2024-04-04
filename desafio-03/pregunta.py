@@ -1,4 +1,5 @@
 from alternativa import Alternativa
+from typing import List
 
 class Pregunta():
     def __init__(self, enunciado:str, requerida:bool, alternativas:dict, ayuda="") -> None:
@@ -10,10 +11,10 @@ class Pregunta():
             self.__lista_de_alternativas.append(Alternativa(alternativa["contenido"], alternativa["ayuda"]))
     
     @property
-    def lista_de_alternativas(self):
+    def lista_de_alternativas(self) -> List[Alternativa]:
         return self.__lista_de_alternativas
 
-    def mostrar_pregunta(self):
+    def mostrar_pregunta(self) -> None:
         if self.requerida:
             print(f"La pregunta requerida")
         else:
