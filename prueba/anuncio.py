@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 from error import SubTipoInvalidoError
+from typing import Union
+
 
 class Anuncio(ABC):
     def __init__(self, ancho:int, alto:int, url_archivo:str, url_clic:str, sub_tipo:str) -> None:
@@ -68,10 +70,15 @@ class Anuncio(ABC):
         for formato in (Video, Display, Social):
             print(f"FORMATO {formato.FORMATO}:")
             print("====================")
-            for subtipo in formato.SUB_TIPOS:
-                print(f"- {subtipo}")
+            for sub_tipo in formato.SUB_TIPOS:
+                print(f"- {sub_tipo}")
             print('\n')
         
+    def formato(sub_tipo):
+        for formato in (Video, Display, Social):
+            if sub_tipo in formato.SUB_TIPOS:
+                return formato
+        return None
 
     @abstractmethod
     def comprimir_anuncio(self):
@@ -126,10 +133,10 @@ class Display(Anuncio):
         super().__init__(ancho, alto, url_archivo, url_clic, sub_tipo)
     
     def comprimir_anuncio(self):
-        pass
+        print("COMPRESIÓN DE ANUNCIOS DISPLAY NO IMPLEMENTADA AÚN")
 
     def redimensionar_anuncio(self):
-        pass
+        print("REDIMENSIONAMIENTO DE ANUNCIOS DISPLAY NO IMPLEMENTADO AÚN")
 
 class Social(Anuncio):
     FORMATO = "Social"
@@ -139,9 +146,9 @@ class Social(Anuncio):
         super().__init__(ancho, alto, url_archivo, url_clic, sub_tipo)
     
     def comprimir_anuncio(self):
-        pass
+        print("COMPRESIÓN DE ANUNCIOS DE REDES SOCIALES NO IMPLEMENTADA AÚN")
 
     def redimensionar_anuncio(self):
-        pass
+        print("REDIMENSIONAMIENTO DE ANUNCIOS DE REDES SOCIALES NO IMPLEMENTADO AÚN")
 
-Anuncio.mostrar_formatos()
+#Anuncio.mostrar_formatos()
